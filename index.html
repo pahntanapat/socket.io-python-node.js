@@ -1,25 +1,28 @@
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <button onClick="sendMsg()">Hit Me</button>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
     <script>
-      const socket = io("http://localhost:8080");
+        const socket = io();
 
-      function sendMsg() {
-        socket.emit("message", "HELLO WORLD");
-      }
-      socket.on("message", function(data) {
-        console.log(data);
-      });
+        function sendMsg() {
+            socket.emit("send_message", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
+        }
+        socket.on("back", function (...data) {
+            console.log(data);
+        });
     </script>
-  </body>
+</body>
+
 </html>
