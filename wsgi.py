@@ -18,13 +18,13 @@ app = socketio.WSGIApp(sio, static_files={'/': 'index.html'})
 
 
 @sio.event
-def connect(sid, req, auth):
+def connect(sid, wsgi_environ, auth):
     print(sid)
     # Attach data to SID by
     # https://python-socketio.readthedocs.io/en/latest/server.html#user-sessions
-    print(req)
+    print(wsgi_environ)
     print(auth)
-    sio.emit('back', sid, req, auth)
+    sio.emit('back', sid, wsgi_environ, auth)
 
 
 ## If we wanted to create a new websocket endpoint,

@@ -1,6 +1,6 @@
 --extra-index-url https://pypi.org/simple
 python-socketio
-orjson
+fastapi
 
 ### Server
 gunicorn

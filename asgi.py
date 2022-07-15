@@ -18,13 +18,13 @@ app = socketio.ASGIApp(sio, static_files={'/': 'index.html'})
 
 
 @sio.event
-async def connect(sid, req, auth):
+async def connect(sid, asgi_environ, auth):
     print(sid)
     # Attach data to SID by
     # https://python-socketio.readthedocs.io/en/latest/server.html#user-sessions
-    print(req)
+    print(asgi_environ)
     print(auth)
-    sio.emit('back', sid, req, auth)
+    sio.emit('back', sid, asgi_environ, auth)
 
 
 ## If we wanted to create a new websocket endpoint,
