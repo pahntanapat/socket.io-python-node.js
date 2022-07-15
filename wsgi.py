@@ -1,10 +1,10 @@
 import socketio
-import uvicorn
+import eventlet
 
 ## creates a new Async Socket IO Server
-sio = socketio.AsyncServer(async_mode='asgi')
+sio = socketio.Server(async_mode='eventlet')
 ## Creates a new Aiohttp Web Application
-app = socketio.ASGIApp(sio, static_files={'/': 'index.html'})
+app = socketio.WSGIApp(sio, static_files={'/': 'index.html'})
 # app = web.Application()
 # Binds our Socket.IO server to our Web App
 ## instance
@@ -18,7 +18,7 @@ app = socketio.ASGIApp(sio, static_files={'/': 'index.html'})
 
 
 @sio.event
-async def connect(sid, req, auth):
+def connect(sid, req, auth):
     print(sid)
     # Attach data to SID by
     # https://python-socketio.readthedocs.io/en/latest/server.html#user-sessions
@@ -30,7 +30,7 @@ async def connect(sid, req, auth):
 ## use this decorator, passing in the name of the
 ## event we wish to listen out for
 @sio.event
-async def send_message(sid, *message):
+def send_message(sid, *message):
     ## When we receive a new event of type
     ## 'message' through a socket.io connection
     ## we print the socket ID and the message
@@ -38,7 +38,7 @@ async def send_message(sid, *message):
     print(message)
     for i in message:
         print(i, type(i))
-    await sio.emit('back', message, to=sid)
+    sio.emit('back', message, to=sid)
 
 
 ## We bind our aiohttp endpoint to our app
@@ -47,4 +47,4 @@ async def send_message(sid, *message):
 
 ## We kick off our server
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=5000)
+    eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
