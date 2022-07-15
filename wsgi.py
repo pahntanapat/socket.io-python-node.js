@@ -24,6 +24,7 @@ def connect(sid, req, auth):
     # https://python-socketio.readthedocs.io/en/latest/server.html#user-sessions
     print(req)
     print(auth)
+    sio.emit('back', sid, req, auth)
 
 
 ## If we wanted to create a new websocket endpoint,
