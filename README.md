@@ -8,6 +8,11 @@ pip install -r requirements.txt
 
 
 ## Deploy
+try asgi (AsyncIO)
 ```sh
-python main.py
+python asgi.py
+```
+Try wsgi
+```sh
+python wsgi.py
 ```
