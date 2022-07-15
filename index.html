@@ -14,7 +14,7 @@
 
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
     <script>
-        const socket = io();
+        const socket = io({ "auth": { "token": "test" } });
 
         function sendMsg() {
             socket.emit("send_message", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });

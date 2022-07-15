@@ -1,4 +1,3 @@
-import orjson
 import socketio
 import uvicorn
 
@@ -16,6 +15,13 @@ app = socketio.ASGIApp(sio, static_files={'/': 'index.html'})
 #async def index(request):
 #    with open('index.html') as f:
 #        return web.Response(text=f.read(), content_type='text/html')
+
+
+@sio.event
+async def connect(sid, req, auth):
+    print(req)
+    print((req.get('asgi.scope')))
+    print(auth)
 
 
 ## If we wanted to create a new websocket endpoint,
