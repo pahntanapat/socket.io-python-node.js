@@ -1,3 +1,4 @@
+import asyncio
 import socketio
 import uvicorn
 
@@ -24,7 +25,15 @@ async def connect(sid, asgi_environ, auth):
     # https://python-socketio.readthedocs.io/en/latest/server.html#user-sessions
     print(asgi_environ)
     print(auth)
-    sio.emit('back', sid, asgi_environ, auth)
+
+    sio.enter_room(sid=sid, room=auth)
+
+    async with sio.session(sid=sid) as session:
+        session['user'] = auth
+
+    await asyncio.gather(sio.emit('sio connect', sid, auth),
+                         sio.emit('your connection', sid, auth, asgi_environ),
+                         sio.emit('your all connection', sid, auth, room=auth))
 
 
 ## If we wanted to create a new websocket endpoint,
@@ -40,6 +49,21 @@ async def send_message(sid, *message):
     for i in message:
         print(i, type(i))
     await sio.emit('back', message, to=sid)
+
+
+@sio.event
+async def send_room(sid, *message):
+    ## When we receive a new event of type
+    ## 'message' through a socket.io connection
+    ## we print the socket ID and the message
+    session = await sio.get_session(sid=sid)
+
+    print("Socket ID: ", sid, 'Session:', session)
+    print(message)
+    for i in message:
+        print(i, type(i))
+
+    await sio.emit('back', message, to=session['user'])
 
 
 ## We bind our aiohttp endpoint to our app

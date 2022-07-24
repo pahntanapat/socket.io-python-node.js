@@ -24,7 +24,15 @@ def connect(sid, wsgi_environ, auth):
     # https://python-socketio.readthedocs.io/en/latest/server.html#user-sessions
     print(wsgi_environ)
     print(auth)
-    sio.emit('back', sid, wsgi_environ, auth)
+
+    with sio.session(sid=sid) as session:
+        session['user'] = auth
+
+    sio.emit('sio connect', sid, auth)
+    sio.emit('your connection', sid, auth, wsgi_environ)
+
+    sio.enter_room(sid=sid, room=auth)
+    sio.emit('your all connection', sid, auth, room=auth)
 
 
 ## If we wanted to create a new websocket endpoint,
@@ -40,6 +48,21 @@ def send_message(sid, *message):
     for i in message:
         print(i, type(i))
     sio.emit('back', message, to=sid)
+
+
+@sio.event
+def send_room(sid, *message):
+    ## When we receive a new event of type
+    ## 'message' through a socket.io connection
+    ## we print the socket ID and the message
+    session = sio.get_session(sid=sid)
+    
+    print("Socket ID: ", sid, 'Session:', session)
+    print(message)
+    
+    for i in message:
+        print(i, type(i))
+    sio.emit('back', message, to=session['user'])
 
 
 ## We bind our aiohttp endpoint to our app
