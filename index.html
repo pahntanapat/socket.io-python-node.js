@@ -17,7 +17,7 @@
 
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
     <script>
-
+        var socket;
         function connectSIO() {
             socket = io({ "auth": document.getElementById('name').value });
             socket.on("back", function (...data) {
@@ -29,7 +29,7 @@
                 socket.emit("send_message", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
             }
         }
-        function sendMsg() {
+        function sendRoom() {
             if (socket) {
                 socket.emit("send_room", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
             }
