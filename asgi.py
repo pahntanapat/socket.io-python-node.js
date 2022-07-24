@@ -3,9 +3,13 @@ import socketio
 import uvicorn
 
 ## creates a new Async Socket IO Server
-sio = socketio.AsyncServer(async_mode='asgi')
+
+# Different path: https://stackoverflow.com/questions/29511404/connect-to-socket-io-server-with-specific-path-and-namespace
+sio = socketio.AsyncServer(async_mode='asgi',
+                           client_manager=socketio.AsyncRedisManager('redis://localhost:6378/0'))
 ## Creates a new Aiohttp Web Application
 app = socketio.ASGIApp(sio,
+                       socketio_path='/asgi/socket.io',
                        static_files={
                            '/': 'index.html',
                            '/multiple.html': 'multiple.html'
