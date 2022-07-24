@@ -1,8 +1,13 @@
 import socketio
-import eventlet
+from gevent.pywsgi import WSGIServer
+from gevent.monkey import patch_all
+from geventwebsocket.handler import WebSocketHandler
 
+patch_all()
 ## creates a new Async Socket IO Server
-sio = socketio.Server(async_mode='eventlet')
+sio = socketio.Server(
+    async_mode='gevent',
+    client_manager=socketio.RedisManager('redis://localhost:6378/0'))
 ## Creates a new Aiohttp Web Application
 app = socketio.WSGIApp(sio,
                        static_files={
@@ -75,4 +80,4 @@ def send_room(sid, *message):
 
 ## We kick off our server
 if __name__ == '__main__':
-    eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
+    WSGIServer(('0.0.0.0', 5000), app, handler_class=WebSocketHandler).serve_forever()
