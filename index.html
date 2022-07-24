@@ -10,18 +10,30 @@
 </head>
 
 <body>
-    <button onClick="sendMsg()">Hit Me</button>
+    <input id="name" type="text" value="test">
+    <button onClick="connectSIO()">Connect</button>
+    <button onClick="sendMsg()">Send Me</button>
+    <button onClick="sendRoom()">Send Us</button>
 
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
     <script>
-        const socket = io({ "auth": { "token": "test" } });
 
-        function sendMsg() {
-            socket.emit("send_message", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
+        function connectSIO() {
+            socket = io({ "auth": document.getElementById('name').value });
+            socket.on("back", function (...data) {
+                console.log(data);
+            });
         }
-        socket.on("back", function (...data) {
-            console.log(data);
-        });
+        function sendMsg() {
+            if (socket) {
+                socket.emit("send_message", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
+            }
+        }
+        function sendMsg() {
+            if (socket) {
+                socket.emit("send_room", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
+            }
+        }
     </script>
 </body>
 
