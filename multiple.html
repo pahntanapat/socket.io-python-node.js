@@ -17,13 +17,15 @@
 
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
     <script>
-        var socket1;
+        var socket1, socket2;
         function connectSIO() {
             socket1 = io({ "auth": document.getElementById('name').value });
+            socket1.on('connect', () => console.log('connect 1'));
             socket1.on("back", function (...data) {
                 console.log(data);
             });
-            socket2 = io('/asgi', { "auth": document.getElementById('name').value });
+            socket2 = io({ "auth": document.getElementById('name').value, "path": '/asgi/socket.io' });
+            socket2.on('connect', () => console.log('connect 2'));
             socket2.on("back", function (...data) {
                 console.log(data);
             });
@@ -41,7 +43,7 @@
                 socket1.emit("send_room", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
             }
             if (socket2) {
-                socket2.emit("send_message", "HELLO WORLD 2", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD 2", "num": -1.5 });
+                socket2.emit("send_room", "HELLO WORLD 2", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD 2", "num": -1.5 });
             }
         }
     </script>
