@@ -5,7 +5,11 @@ import uvicorn
 ## creates a new Async Socket IO Server
 sio = socketio.AsyncServer(async_mode='asgi')
 ## Creates a new Aiohttp Web Application
-app = socketio.ASGIApp(sio, static_files={'/': 'index.html'})
+app = socketio.ASGIApp(sio,
+                       static_files={
+                           '/': 'index.html',
+                           '/multiple.html': 'multiple.html'
+                       })
 # app = web.Application()
 # Binds our Socket.IO server to our Web App
 ## instance

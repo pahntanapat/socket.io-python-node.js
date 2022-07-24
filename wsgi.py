@@ -4,7 +4,11 @@ import eventlet
 ## creates a new Async Socket IO Server
 sio = socketio.Server(async_mode='eventlet')
 ## Creates a new Aiohttp Web Application
-app = socketio.WSGIApp(sio, static_files={'/': 'index.html'})
+app = socketio.WSGIApp(sio,
+                       static_files={
+                           '/': 'index.html',
+                           '/multiple.html': 'multiple.html'
+                       })
 # app = web.Application()
 # Binds our Socket.IO server to our Web App
 ## instance
