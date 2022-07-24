@@ -6,3 +6,9 @@ fastapi
 gunicorn
 eventlet
 uvicorn[standard]
+gevent
+gevent-websocket
+
+# Redis
+redis
+aioredis
