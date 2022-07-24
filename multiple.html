@@ -1,0 +1,50 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+</head>
+
+<body>
+    <input id="name" type="text" value="test">
+    <button onClick="connectSIO()">Connect</button>
+    <button onClick="sendMsg()">Send Me</button>
+    <button onClick="sendRoom()">Send Us</button>
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+    <script>
+        var socket1;
+        function connectSIO() {
+            socket1 = io({ "auth": document.getElementById('name').value });
+            socket1.on("back", function (...data) {
+                console.log(data);
+            });
+            socket2 = io('/asgi', { "auth": document.getElementById('name').value });
+            socket2.on("back", function (...data) {
+                console.log(data);
+            });
+        }
+        function sendMsg() {
+            if (socket1) {
+                socket1.emit("send_message", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
+            }
+            if (socket2) {
+                socket2.emit("send_message", "HELLO WORLD 2", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD 2", "num": -1.5 });
+            }
+        }
+        function sendRoom() {
+            if (socket1) {
+                socket1.emit("send_room", "HELLO WORLD", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD", "num": -1.5 });
+            }
+            if (socket2) {
+                socket2.emit("send_message", "HELLO WORLD 2", 1, -1.5, true, ["HELLO WORLD", 1, -1.5, true], { "object": "HELLO WORLD 2", "num": -1.5 });
+            }
+        }
+    </script>
+</body>
+
+</html>
