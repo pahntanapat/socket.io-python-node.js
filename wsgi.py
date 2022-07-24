@@ -28,11 +28,11 @@ def connect(sid, wsgi_environ, auth):
     with sio.session(sid=sid) as session:
         session['user'] = auth
 
-    sio.emit('sio connect', sid, auth)
-    sio.emit('your connection', sid, auth, wsgi_environ)
+    sio.emit('back', data=['sio connect', sid, auth])
+    sio.emit('back', data=['your connection', sid, auth], to=sid)
 
     sio.enter_room(sid=sid, room=auth)
-    sio.emit('your all connection', sid, auth, room=auth)
+    sio.emit('back', data=['your all connection', sid, auth], room=auth)
 
 
 ## If we wanted to create a new websocket endpoint,
@@ -56,10 +56,10 @@ def send_room(sid, *message):
     ## 'message' through a socket.io connection
     ## we print the socket ID and the message
     session = sio.get_session(sid=sid)
-    
+
     print("Socket ID: ", sid, 'Session:', session)
     print(message)
-    
+
     for i in message:
         print(i, type(i))
     sio.emit('back', message, to=session['user'])

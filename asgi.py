@@ -31,9 +31,10 @@ async def connect(sid, asgi_environ, auth):
     async with sio.session(sid=sid) as session:
         session['user'] = auth
 
-    await asyncio.gather(sio.emit('sio connect', sid, auth),
-                         sio.emit('your connection', sid, auth, asgi_environ),
-                         sio.emit('your all connection', sid, auth, room=auth))
+    await asyncio.gather(
+        sio.emit('back', data=['sio connect', sid, auth]),
+        sio.emit('back', data=['your connection', sid, auth], to=sid),
+        sio.emit('back', data=['your all connection', sid, auth], room=auth))
 
 
 ## If we wanted to create a new websocket endpoint,
@@ -72,4 +73,4 @@ async def send_room(sid, *message):
 
 ## We kick off our server
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=5000)
+    uvicorn.run(app, host='0.0.0.0', port=5001)
